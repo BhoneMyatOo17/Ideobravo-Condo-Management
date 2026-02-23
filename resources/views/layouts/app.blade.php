@@ -5,22 +5,22 @@
     <!-- Meta Tags -->
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="Copyright" content="Inazuma" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="author" content="Ranyeh" />
     <meta name="rating" content="general" />
     <meta name="language" content="English" />
-    <meta name="application-name" content="Inazuma" />
-    <meta name="description" content="Tailwind CSS Company Landing Page Template by Ranyeh." />
-    <meta name="keywords" content="company" />
-    <meta name="twitter:title" content="Inazuma | Tailwind CSS Company Landing Page" />
-    <meta name="twitter:description" content="Tailwind CSS Company Landing Page Template by Ranyeh." />
-    <meta name="twitter:image" content="{{ asset('images/inazuma-cover.png') }}" />
-    <meta content="Inazuma | Tailwind CSS Company Landing Page" property="og:title" />
-    <meta content="Inazuma" property="og:site_name" />
-    <meta content="Tailwind CSS Company Landing Page Template by Ranyeh." property="og:description" />
-    <meta content="{{ asset('images/inazuma-cover.png') }}" property="og:image" />
-    <meta content="https://ranyeh24.github.io/inazuma-tailwind" property="og:url" />
+    <meta name="application-name" content="{{ config('app.name') }}" />
+    <meta name="description"
+        content="Smart Urban Residences Crafted for Life. Thailand's leading high-rise condominium developer." />
+    <meta name="keywords" content="condominium, Bangkok, Thailand, real estate, urban living" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ config('app.name') }}" />
+    <meta name="twitter:description" content="Smart Urban Residences Crafted for Life." />
+    <meta name="twitter:image" content="{{ asset('images/og-cover.jpg') }}" />
+    <meta content="{{ config('app.name') }}" property="og:title" />
+    <meta content="{{ config('app.name') }}" property="og:site_name" />
+    <meta content="Smart Urban Residences Crafted for Life." property="og:description" />
+    <meta content="{{ asset('images/og-cover.jpg') }}" property="og:image" />
+    <meta content="{{ url('/') }}" property="og:url" />
     <meta content="website" property="og:type" />
 
     <meta name="msapplication-TileColor" content="#3d63dd" />
