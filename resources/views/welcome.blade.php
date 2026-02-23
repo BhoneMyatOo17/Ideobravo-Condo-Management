@@ -53,7 +53,7 @@
                     <div class="w-full px-5">
                         <div class="scroll-revealed relative z-10 mx-auto max-w-[845px]">
                             <figure class="mt-16">
-                                <img src="{{ asset('images/hero.jpg') }}" alt="Ideo Condominium"
+                                <img id="hero-image" src="{{ asset('images/hero.jpg') }}" alt="Ideo Condominium"
                                     class="mx-auto max-w-full rounded-t-xl rounded-tr-xl" />
                             </figure>
 
@@ -119,10 +119,12 @@
                                 <p>
                                     Ideo is one of Thailand's premier condominium developers, specializing in high-rise
                                     condominium projects throughout Bangkok. We are committed to creating modern living
-                                    spaces that combine innovative design and accessible locations near BTS and MRT stations.
+                                    spaces that combine innovative design and accessible locations near BTS and MRT
+                                    stations.
                                 </p>
                                 <p>
-                                    Our developments are designed to meet the diverse needs of both local and international residents, offering a perfect blend of comfort, convenience, and
+                                    Our developments are designed to meet the diverse needs of both local and international
+                                    residents, offering a perfect blend of comfort, convenience, and
                                     contemporary lifestyle.
                                 </p>
                             </div>

@@ -13,7 +13,6 @@ window.addEventListener('load', function() {
         loader.style.visibility = 'hidden';
         loader.style.pointerEvents = 'none';
         
-        // Optional: Add a smooth transition
         setTimeout(() => {
             loader.style.display = 'none';
         }, 300);
@@ -68,6 +67,15 @@ if (!stickyByDefault) {
   });
 }
 
+// Hero image theme switch
+function updateHeroImage(theme) {
+  const heroImage = document.getElementById('hero-image');
+  if (!heroImage) return;
+  heroImage.src = theme === 'dark'
+    ? heroImage.src.replace(/hero(-n)?\.jpg/, 'hero-n.jpg')
+    : heroImage.src.replace(/hero(-n)?\.jpg/, 'hero.jpg');
+}
+
 // Web theme
 const webTheme = document.querySelector("[data-web-trigger=web-theme]"),
   html = document.querySelector("html");
@@ -86,6 +94,7 @@ window.addEventListener("load", function () {
   }
 
   html.dataset.webTheme = theme;
+  updateHeroImage(theme);
 });
 
 webTheme.addEventListener("click", function () {
@@ -98,6 +107,7 @@ webTheme.addEventListener("click", function () {
   theme = theme == "dark" ? "light" : "dark";
   localStorage.setItem("Inazuma_WebTheme", theme);
   html.dataset.webTheme = theme;
+  updateHeroImage(theme);
 });
 
 // Scrollspy
@@ -273,6 +283,7 @@ if (st) {
     });
   });
 }
+
 // Logo color switch on scroll - only for transparent pages
 const logoWhite = document.getElementById('logo-white');
 const logoBlue = document.getElementById('logo-blue');
@@ -284,13 +295,11 @@ const isTransparentPage = transparentPages.includes(window.location.pathname);
 // Function to switch logos
 function switchLogos(showBlue) {
   if (showBlue) {
-    // Show blue logos
     if (logoWhite) logoWhite.classList.add('hidden');
     if (logoBlue) logoBlue.classList.remove('hidden');
     if (logoWhiteMobile) logoWhiteMobile.classList.add('hidden');
     if (logoBlueMobile) logoBlueMobile.classList.remove('hidden');
   } else {
-    // Show white logos
     if (logoWhite) logoWhite.classList.remove('hidden');
     if (logoBlue) logoBlue.classList.add('hidden');
     if (logoWhiteMobile) logoWhiteMobile.classList.remove('hidden');
@@ -312,6 +321,7 @@ window.addEventListener('scroll', function() {
     }
   }
 });
+
 // Show loading for specific actions
 function showLoader() {
   const loader = document.createElement('div');

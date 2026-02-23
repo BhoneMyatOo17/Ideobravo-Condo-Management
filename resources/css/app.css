@@ -127,6 +127,10 @@
     @apply !opacity-60 !pointer-events-none !select-none;
   }
 
+  #home {
+    @apply dark:bg-gray-900;
+  }
+
   .page-loading {
     background-image: radial-gradient(circle at top right,
         rgba(61, 99, 221, 0.1) 0%,
@@ -319,7 +323,7 @@
   }
 
   #home {
-    @apply bg-no-repeat bg-center bg-cover;
+    @apply bg-no-repeat bg-center bg-cover dark:bg-gray-900;
     background-image: radial-gradient(circle at top right,
         rgba(255, 255, 255, 0.1) 0%,
         rgba(255, 255, 255, 0.1) 28%,
@@ -329,6 +333,35 @@
         rgba(255, 255, 255, 0.05) 63%,
         rgba(255, 255, 255, 0.025) 63%,
         rgba(255, 255, 255, 0.025) 100%);
+  }
+
+  [data-web-theme="dark"] #home {
+    background-color: #111827;
+    background-image: radial-gradient(circle at top right,
+        rgba(99, 102, 241, 0.15) 0%,
+        rgba(99, 102, 241, 0.15) 28%,
+        rgba(99, 102, 241, 0.1) 28%,
+        rgba(99, 102, 241, 0.1) 45%,
+        rgba(99, 102, 241, 0.06) 45%,
+        rgba(99, 102, 241, 0.06) 63%,
+        rgba(99, 102, 241, 0.03) 63%,
+        rgba(99, 102, 241, 0.03) 100%);
+  }
+
+  [data-web-theme="dark"] #home h1,
+  [data-web-theme="dark"] #home p,
+  [data-web-theme="dark"] #home .text-primary-color {
+    color: #e2e8f0;
+  }
+
+  [data-web-theme="dark"] #home a.bg-primary-color {
+    background-color: #6366f1;
+    color: #fff;
+  }
+
+  [data-web-theme="dark"] #home a.bg-primary-color\/\[0\.15\] {
+    background-color: rgba(99, 102, 241, 0.2);
+    color: #e2e8f0;
   }
 
   .bg-rings {

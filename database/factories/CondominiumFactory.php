@@ -3,9 +3,11 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Condominium;
 
 class CondominiumFactory extends Factory
 {
+    protected $model = Condominium::class;
     public function definition(): array
     {
         $names = [
