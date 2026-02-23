@@ -45,7 +45,7 @@
         <!-- Featured Image -->
         @if ($announcement->image)
           <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
-            <img src="{{ asset('storage/' . $announcement->image) }}" alt="{{ $announcement->title }}"
+            <img src="{{ Storage::url($announcement->image) }}" alt="{{ $announcement->title }}"
               class="w-full h-96 object-cover">
           </div>
         @endif

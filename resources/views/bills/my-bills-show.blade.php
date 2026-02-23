@@ -195,8 +195,11 @@
 
                   <!-- QR Code -->
                   <div class="bg-white p-4 rounded-lg shadow-md mb-6">
-                    <img src="{{ asset('images/payment-qr.png') }}" alt="Payment QR Code" class="w-64 h-64">
+                    <img
+                      src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data={{ urlencode('https://ideobravo.site/payment?amount=' . $bill->amount . '&bill=' . $bill->bill_number) }}"
+                      alt="Payment QR Code" class="w-64 h-64">
                   </div>
+                  <p class="text-xs text-center text-gray-500 dark:text-gray-400 mb-4">Bill #{{ $bill->bill_number }}</p>
 
                   <!-- Amount Display -->
                   <div

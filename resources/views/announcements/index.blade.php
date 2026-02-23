@@ -112,7 +112,7 @@
         <!-- Image -->
         <div class="relative h-56 overflow-hidden">
           @if($announcement->image)
-            <img src="{{ asset('storage/' . $announcement->image) }}" alt="{{ $announcement->title }}"
+            <img src="{{ Storage::url($announcement->image) }}" alt="{{ $announcement->title }}"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
           @else
             <!-- Fallback gradient background if no image -->

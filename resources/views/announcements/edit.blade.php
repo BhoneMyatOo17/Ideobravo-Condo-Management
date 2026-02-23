@@ -150,7 +150,7 @@
                 Current Image
               </label>
               <div class="relative w-full max-w-md">
-                <img src="{{ asset('storage/' . $announcement->image) }}" alt="{{ $announcement->title }}"
+                <img src="{{ Storage::url($announcement->image) }}" alt="{{ $announcement->title }}"
                   class="w-full h-48 object-cover rounded-lg border border-gray-300 dark:border-gray-600">
                 <div class="mt-2 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                   <i class="lni lni-checkmark-circle text-green-500"></i>

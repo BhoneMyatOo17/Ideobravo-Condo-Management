@@ -52,10 +52,6 @@ Route::get('/terms', function () {
     return view('terms');
 })->name('terms');
 
-Route::get('/logout-page', function () {
-    return view('logout');
-});
-
 //500 Error TEST ONLY route
 Route::get('/test-500', function () {
     abort(500);
@@ -63,11 +59,6 @@ Route::get('/test-500', function () {
 
 Route::get('/form', function () {
     return view('samples.form');
-});
-
-Route::get('/test-loading', function () {
-    session()->flash('show_loading', true);
-    return view('test-loading');
 });
 
 Route::get('/confirmed', function () {
@@ -133,13 +124,13 @@ Route::middleware(['auth', 'verified', 'ensure.user.has.role', 'role:staff,admin
 */
 
 Route::middleware(['auth', 'verified', 'ensure.user.has.role'])->group(function () {
-    
+
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     // Announcements - List view (All users can view)
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
-    
+
     // Staff/Admin announcement management routes MUST come before the {announcement} wildcard
     Route::middleware(['role:staff,admin'])->group(function () {
         Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcements.create');
@@ -148,7 +139,7 @@ Route::middleware(['auth', 'verified', 'ensure.user.has.role'])->group(function 
         Route::patch('/announcements/{announcement}', [AnnouncementController::class, 'update'])->name('announcements.update');
         Route::delete('/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
     });
-    
+
     // This wildcard route must come LAST
     Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
 });
@@ -160,18 +151,18 @@ Route::middleware(['auth', 'verified', 'ensure.user.has.role'])->group(function 
 */
 
 Route::middleware(['auth', 'verified', 'ensure.user.has.role', 'role:resident'])->group(function () {
-    
+
     // My Parcels (Resident view of their own parcels)
     Route::get('/my-parcels', [ParcelController::class, 'myParcels'])->name('parcels.my-parcels');
     Route::get('/my-parcels/{parcel}', [ParcelController::class, 'myParcelShow'])->name('parcels.my-parcel-show');
 
     // My Bills (Resident view of their own bills)
     Route::prefix('my-bills')->name('my-bills.')->group(function () {
-    Route::get('/', [BillController::class, 'myBills'])->name('index');
-    Route::get('/{bill}', [BillController::class, 'myBillShow'])->name('show');
-    Route::post('/{bill}/upload-payment', [BillController::class, 'uploadPayment'])->name('upload-payment');
-    Route::post('/{bill}/card-payment', [BillController::class, 'submitCard'])->name('card.submit');
-});
+        Route::get('/', [BillController::class, 'myBills'])->name('index');
+        Route::get('/{bill}', [BillController::class, 'myBillShow'])->name('show');
+        Route::post('/{bill}/upload-payment', [BillController::class, 'uploadPayment'])->name('upload-payment');
+        Route::post('/{bill}/card-payment', [BillController::class, 'submitCard'])->name('card.submit');
+    });
 });
 
 /*
@@ -181,7 +172,7 @@ Route::middleware(['auth', 'verified', 'ensure.user.has.role', 'role:resident'])
 */
 
 Route::middleware(['auth', 'verified', 'ensure.user.has.role', 'role:staff,admin'])->group(function () {
-    
+
     // Parcel Management (Staff can receive and manage parcels)
     Route::get('/parcels', [ParcelController::class, 'index'])->name('parcels.index');
     Route::get('/parcels/create', [ParcelController::class, 'create'])->name('parcels.create');
@@ -220,7 +211,6 @@ Route::middleware(['auth', 'verified', 'ensure.user.has.role', 'role:staff,admin
         Route::get('/{contact}', [ContactController::class, 'show'])->name('show');
         Route::patch('/{contact}/resolve', [ContactController::class, 'resolve'])->name('resolve');
     });
-
 });
 
 /*
@@ -230,7 +220,7 @@ Route::middleware(['auth', 'verified', 'ensure.user.has.role', 'role:staff,admin
 */
 
 Route::middleware(['auth', 'verified', 'ensure.user.has.role', 'role:admin'])->group(function () {
-    
+
     // Staff Management (Admin only)
     Route::resource('staff', StaffController::class);
 
@@ -238,21 +228,14 @@ Route::middleware(['auth', 'verified', 'ensure.user.has.role', 'role:admin'])->g
     Route::resource('condominiums', CondominiumController::class);
     Route::post('/condominiums/{condominium}/regenerate-code', [CondominiumController::class, 'regenerateCode'])->name('condominiums.regenerate-code');
 
-   // Reports
+    // Reports
     Route::prefix('reports')->name('reports.')->group(function () {
-    Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('index');
-    Route::get('/bills', [App\Http\Controllers\ReportController::class, 'bills'])->name('bills');
-    Route::get('/parcels', [App\Http\Controllers\ReportController::class, 'parcels'])->name('parcels');
-    Route::get('/residents', [App\Http\Controllers\ReportController::class, 'residents'])->name('residents');
+        Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('index');
+        Route::get('/bills', [App\Http\Controllers\ReportController::class, 'bills'])->name('bills');
+        Route::get('/parcels', [App\Http\Controllers\ReportController::class, 'parcels'])->name('parcels');
+        Route::get('/residents', [App\Http\Controllers\ReportController::class, 'residents'])->name('residents');
+    });
 });
 
-});
 
-
-/*
-|--------------------------------------------------------------------------
-| Auth Routes
-|--------------------------------------------------------------------------
-*/
-
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

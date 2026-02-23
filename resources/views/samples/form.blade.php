@@ -64,7 +64,8 @@
     <div class="bg-white dark:bg-gray-800 rounded-t-2xl shadow-xl overflow-hidden">
       <div
         class="w-full h-64 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center">
-        <img src="./songkran.png" alt="Songkran 2026 Event Poster" class="w-full h-full object-cover"
+        <img src="{{ asset('images/songkran.png') }}" alt="Songkran 2026 Event Poster"
+          class="w-full h-full object-cover"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="hidden w-full h-full items-center justify-center">
           <div class="text-center text-white">

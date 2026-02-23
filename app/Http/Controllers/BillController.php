@@ -18,16 +18,16 @@ class BillController extends Controller
     private function getCondominiumId()
     {
         $user = Auth::user();
-        
+
         if ($user->isStaff() && $user->userable) {
             return $user->userable->condominium_id;
         }
-        
+
         if ($user->isAdmin()) {
             // Admin can see first condo or implement condo selection
             return \App\Models\Condominium::first()?->id;
         }
-        
+
         return null;
     }
 
@@ -37,10 +37,10 @@ class BillController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        
+
         // Start the query
         $query = Bill::with(['resident.user', 'generatedByStaff', 'condominium']);
-        
+
         // Apply condominium filter based on user role
         if ($user->isStaff() && $user->userable) {
             // Staff can only see bills from their condominium
@@ -57,11 +57,11 @@ class BillController extends Controller
         // Search filter
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('bill_number', 'like', "%{$search}%")
-                ->orWhereHas('resident.user', function($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                });
+                    ->orWhereHas('resident.user', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -76,7 +76,7 @@ class BillController extends Controller
         }
 
         $bills = $query->orderBy('created_at', 'desc')->paginate(20);
-        
+
         // Calculate stats based on user role
         if ($user->isStaff() && $user->userable) {
             $condoId = $user->userable->condominium_id;
@@ -92,7 +92,7 @@ class BillController extends Controller
             if ($request->filled('condominium_id')) {
                 $statsQuery->where('condominium_id', $request->condominium_id);
             }
-            
+
             $stats = [
                 'total' => (clone $statsQuery)->count(),
                 'pending' => (clone $statsQuery)->where('status', 'pending')->count(),
@@ -100,10 +100,10 @@ class BillController extends Controller
                 'overdue' => (clone $statsQuery)->where('status', 'overdue')->count(),
             ];
         }
-        
+
         // Get all condominiums for admin filter dropdown
         $condominiums = $user->isAdmin() ? \App\Models\Condominium::orderBy('name')->get() : collect();
-        
+
         return view('bills.index', compact('bills', 'stats', 'condominiums'));
     }
 
@@ -113,7 +113,7 @@ class BillController extends Controller
     public function create()
     {
         $condominiumId = $this->getCondominiumId();
-        
+
         if (!$condominiumId) {
             abort(403, 'No condominium associated with your account.');
         }
@@ -123,7 +123,7 @@ class BillController extends Controller
             ->with('user')
             ->orderBy('unit_number')
             ->get();
-        
+
         return view('bills.create', compact('residents'));
     }
 
@@ -133,21 +133,21 @@ class BillController extends Controller
     public function store(Request $request)
     {
         $condominiumId = $this->getCondominiumId();
-        
+
         if (!$condominiumId) {
             abort(403, 'No condominium associated with your account.');
         }
 
         $validated = $request->validate([
-        'resident_id' => 'required|exists:residents,id',
-        'bill_type' => 'required|in:common_area,water,electricity,insurance,parking,other',
-        'amount' => 'required|numeric|min:1',
-        'issue_date' => 'required|date',
-        'due_date' => 'required|date|after_or_equal:issue_date',
-        'notes' => 'nullable|string',
-    ], [
-        'amount.min' => 'The bill amount must be at least ฿1.00',
-    ]);
+            'resident_id' => 'required|exists:residents,id',
+            'bill_type' => 'required|in:common_area,water,electricity,insurance,parking,other',
+            'amount' => 'required|numeric|min:1',
+            'issue_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:issue_date',
+            'notes' => 'nullable|string',
+        ], [
+            'amount.min' => 'The bill amount must be at least ฿1.00',
+        ]);
 
         // Get resident details
         $resident = Resident::findOrFail($validated['resident_id']);
@@ -161,19 +161,19 @@ class BillController extends Controller
         $bill = Bill::create($validated);
 
         try {
-    $resident = Resident::with('user')->find($validated['resident_id']);
-    
-    if ($resident && $resident->user && $resident->user->email) {
-        Mail::to($resident->user->email)->send(new NewBillMail(
-            $bill,
-            $resident->user->email,
-            $resident->user->name
-        ));
-    }
-} catch (\Exception $e) {
-    // Log error but don't fail the bill creation
- logger()->error('Failed to send bill notification email: ' . $e->getMessage());
-}
+            $resident = Resident::with('user')->find($validated['resident_id']);
+
+            if ($resident && $resident->user && $resident->user->email) {
+                Mail::to($resident->user->email)->send(new NewBillMail(
+                    $bill,
+                    $resident->user->email,
+                    $resident->user->name
+                ));
+            }
+        } catch (\Exception $e) {
+            // Log error but don't fail the bill creation
+            logger()->error('Failed to send bill notification email: ' . $e->getMessage());
+        }
 
         return redirect()->route('bills.index')
             ->with('success', 'Bill created successfully.');
@@ -209,7 +209,7 @@ class BillController extends Controller
     public function edit(Bill $bill)
     {
         $condominiumId = $this->getCondominiumId();
-        
+
         if ($bill->condominium_id !== $condominiumId) {
             abort(403);
         }
@@ -224,7 +224,7 @@ class BillController extends Controller
             ->with('user')
             ->orderBy('unit_number')
             ->get();
-        
+
         return view('bills.edit', compact('bill', 'residents'));
     }
 
@@ -234,7 +234,7 @@ class BillController extends Controller
     public function update(Request $request, Bill $bill)
     {
         $condominiumId = $this->getCondominiumId();
-        
+
         if ($bill->condominium_id !== $condominiumId) {
             abort(403);
         }
@@ -274,7 +274,7 @@ class BillController extends Controller
     public function markAsPaid(Request $request, Bill $bill)
     {
         $condominiumId = $this->getCondominiumId();
-        
+
         if ($bill->condominium_id !== $condominiumId) {
             abort(403);
         }
@@ -295,7 +295,7 @@ class BillController extends Controller
     public function destroy(Bill $bill)
     {
         $condominiumId = $this->getCondominiumId();
-        
+
         if ($bill->condominium_id !== $condominiumId) {
             abort(403);
         }
@@ -317,7 +317,7 @@ class BillController extends Controller
     public function myBills(Request $request)
     {
         $user = Auth::user();
-        
+
         if (!$user->isResident()) {
             abort(403);
         }
@@ -356,7 +356,7 @@ class BillController extends Controller
     public function myBillShow(Bill $bill)
     {
         $user = Auth::user();
-        
+
         if (!$user->isResident()) {
             abort(403);
         }
@@ -373,72 +373,72 @@ class BillController extends Controller
         return view('bills.my-bills-show', compact('bill'));
     }
     /**
- * Upload payment receipt
- */
-public function uploadPayment(Request $request, Bill $bill)
-{
-    $user = Auth::user();
-    
-    if (!$user->isResident()) {
-        abort(403);
+     * Upload payment receipt
+     */
+    public function uploadPayment(Request $request, Bill $bill)
+    {
+        $user = Auth::user();
+
+        if (!$user->isResident()) {
+            abort(403);
+        }
+
+        $resident = Resident::where('user_id', $user->id)->firstOrFail();
+
+        // Check if bill belongs to this resident
+        if ($bill->resident_id !== $resident->id) {
+            abort(403);
+        }
+
+        $request->validate([
+            'payment_slip' => 'required|image|mimes:jpeg,jpg,png|max:5120',
+        ]);
+
+        $path = $request->file('payment_slip')->store('payment-proofs', 's3');
+
+        $bill->update([
+            'payment_proof' => $path,
+            'payment_method' => 'qr_code',
+            'payment_date' => now(),
+            'status' => 'paid',
+        ]);
+
+        return back()->with('success', 'Payment receipt uploaded! Bill marked as paid.');
     }
-
-    $resident = Resident::where('user_id', $user->id)->firstOrFail();
-
-    // Check if bill belongs to this resident
-    if ($bill->resident_id !== $resident->id) {
-        abort(403);
-    }
-
-    $request->validate([
-        'payment_slip' => 'required|image|mimes:jpeg,jpg,png|max:5120',
-    ]);
-
-    $path = $request->file('payment_slip')->store('payment-proofs', 'public');
-
-    $bill->update([
-        'payment_proof' => $path,
-        'payment_method' => 'qr_code',
-        'payment_date' => now(),
-        'status' => 'paid',
-    ]);
-
-    return back()->with('success', 'Payment receipt uploaded! Bill marked as paid.');
-}
     /**
      * Submit card payment (simulated)
      */
     public function submitCard(Request $request, Bill $bill)
     {
-    $user = Auth::user();
-    
-    if (!$user->isResident()) {
-        abort(403);
+        $user = Auth::user();
+
+        if (!$user->isResident()) {
+            abort(403);
+        }
+
+        $resident = Resident::where('user_id', $user->id)->firstOrFail();
+
+        // Check if bill belongs to this resident
+        if ($bill->resident_id !== $resident->id) {
+            abort(403);
+        }
+
+        $request->validate([
+            'card_number' => 'required',
+            'card_name' => 'required',
+            'expiry' => 'required',
+            'cvv' => 'required',
+        ]);
+
+        // Simulated payment success
+        $bill->update([
+            'payment_method' => 'card',
+            'payment_date' => now(),
+            'status' => 'paid',
+        ]);
+
+        return redirect()
+            ->route('my-bills.show', $bill)
+            ->with('success', 'Payment completed successfully!');
     }
-
-    $resident = Resident::where('user_id', $user->id)->firstOrFail();
-
-    // Check if bill belongs to this resident
-    if ($bill->resident_id !== $resident->id) {
-        abort(403);
-    }
-
-    $request->validate([
-        'card_number' => 'required',
-        'card_name' => 'required',
-        'expiry' => 'required',
-        'cvv' => 'required',
-    ]);
-
-    // Simulated payment success
-    $bill->update([
-        'payment_method' => 'card',
-        'payment_date' => now(),
-        'status' => 'paid',
-    ]);
-
-    return redirect()
-        ->route('my-bills.show', $bill)
-        ->with('success', 'Payment completed successfully!');
-}
 }

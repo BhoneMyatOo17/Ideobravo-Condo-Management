@@ -21,19 +21,19 @@ class AnnouncementController extends Controller
         if (Auth::user()->isResident()) {
             // Residents: only see their condo's announcements
             $residentCondoId = Auth::user()->userable?->condominium_id;
-            
+
             if ($residentCondoId) {
                 $query->where('condominium_id', $residentCondoId);
-                
+
                 $today = now()->toDateString();
-                
+
                 // RESIDENTS: Hide draft announcements (not yet published)
                 $query->where('start_date', '<=', $today);
-                
+
                 // RESIDENTS: Hide expired announcements
-                $query->where(function($q) use ($today) {
+                $query->where(function ($q) use ($today) {
                     $q->whereNull('end_date')
-                      ->orWhere('end_date', '>=', $today);
+                        ->orWhere('end_date', '>=', $today);
                 });
             } else {
                 // If no condo found, show no announcements
@@ -42,7 +42,7 @@ class AnnouncementController extends Controller
         } elseif (Auth::user()->isStaff()) {
             // Staff with condo_id: only see their condo's announcements
             $staffCondoId = Auth::user()->userable?->condominium_id;
-            
+
             if ($staffCondoId) {
                 $query->where('condominium_id', $staffCondoId);
             }
@@ -53,9 +53,9 @@ class AnnouncementController extends Controller
         // Filter by search (title or description)
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%');
+                    ->orWhere('description', 'like', '%' . $search . '%');
             });
         }
 
@@ -72,18 +72,18 @@ class AnnouncementController extends Controller
         // Filter by status (only for staff and admin)
         if ($request->filled('status') && !Auth::user()->isResident()) {
             $today = now()->toDateString();
-            
+
             if ($request->status == 'published') {
                 $query->where('start_date', '<=', $today)
-                      ->where(function($q) use ($today) {
-                          $q->whereNull('end_date')
+                    ->where(function ($q) use ($today) {
+                        $q->whereNull('end_date')
                             ->orWhere('end_date', '>=', $today);
-                      });
+                    });
             } elseif ($request->status == 'draft') {
                 $query->where('start_date', '>', $today);
             } elseif ($request->status == 'expired') {
                 $query->whereNotNull('end_date')
-                      ->where('end_date', '<', $today);
+                    ->where('end_date', '<', $today);
             }
         }
 
@@ -132,7 +132,7 @@ class AnnouncementController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('announcements', 'public');
+            $validated['image'] = $request->file('image')->store('announcements', 's3');
         }
 
         Announcement::create($validated);
@@ -149,16 +149,16 @@ class AnnouncementController extends Controller
         if (Auth::user()->isResident()) {
             // Residents: only their condo
             $residentCondoId = Auth::user()->userable?->condominium_id;
-            
+
             if ($announcement->condominium_id != $residentCondoId) {
                 abort(403, 'Unauthorized access to this announcement.');
             }
-            
+
             // RESIDENTS: Cannot view draft announcements (not yet published)
             if (!$announcement->isPublished()) {
                 abort(403, 'This announcement is not yet published.');
             }
-            
+
             // RESIDENTS: Cannot view expired announcements
             if ($announcement->isExpired()) {
                 abort(403, 'This announcement has expired and is no longer available.');
@@ -166,7 +166,7 @@ class AnnouncementController extends Controller
         } elseif (Auth::user()->isStaff()) {
             // Staff with condo_id: only their condo
             $staffCondoId = Auth::user()->userable?->condominium_id;
-            
+
             if ($staffCondoId && $announcement->condominium_id != $staffCondoId) {
                 abort(403, 'Unauthorized access to this announcement.');
             }
@@ -175,7 +175,7 @@ class AnnouncementController extends Controller
         // Admin: can access all including draft and expired (no check needed)
 
         $announcement->load(['creator', 'condominium']);
-        
+
         return view('announcements.show', compact('announcement'));
     }
 
@@ -192,7 +192,7 @@ class AnnouncementController extends Controller
             // Staff with condo_id: only edit their condo's announcements
             // Staff without condo_id: can edit all
             $staffCondoId = Auth::user()->userable?->condominium_id;
-            
+
             if ($staffCondoId && $announcement->condominium_id != $staffCondoId) {
                 abort(403, 'You can only edit announcements from your condominium.');
             }
@@ -200,7 +200,7 @@ class AnnouncementController extends Controller
         // Admin: can edit all
 
         $condominiums = Condominium::all();
-        
+
         return view('announcements.edit', compact('announcement', 'condominiums'));
     }
 
@@ -214,7 +214,7 @@ class AnnouncementController extends Controller
             abort(403, 'Residents cannot update announcements.');
         } elseif (Auth::user()->isStaff()) {
             $staffCondoId = Auth::user()->userable?->condominium_id;
-            
+
             if ($staffCondoId && $announcement->condominium_id != $staffCondoId) {
                 abort(403, 'You can only update announcements from your condominium.');
             }
@@ -242,9 +242,9 @@ class AnnouncementController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($announcement->image) {
-                Storage::disk('public')->delete($announcement->image);
+                Storage::disk('s3')->delete($announcement->image);
             }
-            $validated['image'] = $request->file('image')->store('announcements', 'public');
+            $validated['image'] = $request->file('image')->store('announcements', 's3');
         }
 
         $announcement->update($validated);
@@ -262,7 +262,7 @@ class AnnouncementController extends Controller
             abort(403, 'Residents cannot delete announcements.');
         } elseif (Auth::user()->isStaff()) {
             $staffCondoId = Auth::user()->userable?->condominium_id;
-            
+
             if ($staffCondoId && $announcement->condominium_id != $staffCondoId) {
                 abort(403, 'You can only delete announcements from your condominium.');
             }

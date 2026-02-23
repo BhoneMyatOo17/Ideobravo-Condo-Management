@@ -116,7 +116,7 @@
                 Current Image
               </label>
               <div class="relative inline-block">
-                <img src="{{ asset('storage/' . $parcel->image_path) }}" alt="Current parcel image"
+                <img src="{{ Storage::url($parcel->image_path) }}" alt="Current parcel image"
                   class="w-48 h-48 object-cover rounded-lg border border-gray-300 dark:border-gray-600">
               </div>
             </div>

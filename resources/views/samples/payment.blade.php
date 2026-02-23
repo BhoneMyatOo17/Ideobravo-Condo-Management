@@ -121,7 +121,7 @@
       <!-- Amount -->
       <div class="bg-green-50 dark:bg-green-900/20 rounded-xl py-6 mb-6">
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Amount Paid</p>
-        <p class="text-3xl font-bold text-green-600 dark:text-green-400">฿2,850.00</p>
+        <p class="text-3xl font-bold text-green-600 dark:text-green-400" id="payment-amount">฿0.00</p>
       </div>
 
       <!-- Transaction ID -->
@@ -154,7 +154,6 @@
   </div>
 
   <script>
-    // Set current date and time
     function updateDateTime() {
       const now = new Date();
       const options = {
@@ -167,21 +166,45 @@
       document.getElementById('current-datetime').textContent = now.toLocaleDateString('en-US', options);
     }
 
-    // Simulate loading then show success
+    function getQueryParam(name) {
+      const url = new URLSearchParams(window.location.search);
+      return url.get(name);
+    }
+
     window.addEventListener('DOMContentLoaded', function () {
       updateDateTime();
 
-      // Show success screen after 2 seconds
+      const amount = getQueryParam('amount');
+      if (amount) {
+        document.getElementById('payment-amount').textContent = '฿' + parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
       setTimeout(function () {
         document.getElementById('loading-screen').style.display = 'none';
         document.getElementById('success-screen').classList.remove('hidden');
       }, 2000);
     });
 
-    // Dark mode detection
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       document.documentElement.classList.add('dark');
     }
+  </script>
+
+  // Simulate loading then show success
+  window.addEventListener('DOMContentLoaded', function () {
+  updateDateTime();
+
+  // Show success screen after 2 seconds
+  setTimeout(function () {
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('success-screen').classList.remove('hidden');
+  }, 2000);
+  });
+
+  // Dark mode detection
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.classList.add('dark');
+  }
   </script>
 
 </body>
