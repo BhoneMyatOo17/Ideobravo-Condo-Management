@@ -11,7 +11,7 @@
 
   <!-- Line Icons CDN -->
   <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
-  <link rel="icon" type="logo" href="./logo.png">
+  <link rel="icon" type="image/png" sizes="194x194" href="{{ asset('favicon/favicon-194x194.png') }}" />
 
   <!-- Custom Tailwind Config -->
   <script>
