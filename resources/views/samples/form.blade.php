@@ -167,7 +167,7 @@
     // Form submission handler - just redirect to confirmation page
     document.getElementById('registration-form').addEventListener('submit', function (e) {
       e.preventDefault();
-      window.location.href = 'confirmed.html';
+      window.location.href = '/confirmed';
     });
 
     // Dark mode detection
