@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use App\Models\Condominium;
 use App\Models\Staff;
 use App\Models\Resident;
@@ -14,9 +14,6 @@ use App\Models\Announcement;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         // Create 3 condominiums
@@ -26,20 +23,21 @@ class DatabaseSeeder extends Seeder
 
             $firstStaffUser = null;
 
-            // Create 2 staff users per condo
+            // Create 2 staff per condo
             for ($i = 0; $i < 2; $i++) {
                 $user = User::factory()->create([
                     'user_type' => 'staff',
+                    'condo_id'  => $condo->id,
                 ]);
 
                 $staff = Staff::factory()->create([
-                    'user_id' => $user->id,
-                    'condominium_id' => $condo->id,
+                    'user_id'          => $user->id,
+                    'condominium_id'   => $condo->id,
                 ]);
 
                 $user->update([
                     'userable_type' => Staff::class,
-                    'userable_id' => $staff->id,
+                    'userable_id'   => $staff->id,
                 ]);
 
                 if ($i === 0) {
@@ -47,36 +45,37 @@ class DatabaseSeeder extends Seeder
                 }
             }
 
-            // Create 10 resident users per condo
+            // Create 10 residents per condo
             for ($i = 0; $i < 10; $i++) {
                 $user = User::factory()->create([
                     'user_type' => 'resident',
+                    'condo_id'  => $condo->id,
                 ]);
 
                 $resident = Resident::factory()->create([
-                    'user_id' => $user->id,
-                    'condominium_id' => $condo->id,
+                    'user_id'          => $user->id,
+                    'condominium_id'   => $condo->id,
                 ]);
 
                 $user->update([
                     'userable_type' => Resident::class,
-                    'userable_id' => $resident->id,
+                    'userable_id'   => $resident->id,
                 ]);
 
                 // Create 3 bills per resident
                 Bill::factory(3)->create([
                     'condominium_id' => $condo->id,
-                    'resident_id' => $resident->id,
-                    'generated_by' => $firstStaffUser->id,
-                    'unit_number' => $resident->unit_number,
+                    'resident_id'    => $resident->id,
+                    'generated_by'   => $firstStaffUser->id,
+                    'unit_number'    => $resident->unit_number,
                 ]);
 
                 // Create 2 parcels per resident
                 Parcel::factory(2)->create([
                     'condominium_id' => $condo->id,
-                    'resident_id' => $resident->id,
-                    'received_by' => $firstStaffUser->id,
-                    'unit_number' => $resident->unit_number,
+                    'resident_id'    => $resident->id,
+                    'received_by'    => $firstStaffUser->id,
+                    'unit_number'    => $resident->unit_number,
                     'recipient_name' => $user->name,
                 ]);
             }
@@ -84,17 +83,18 @@ class DatabaseSeeder extends Seeder
             // Create 5 announcements per condo
             Announcement::factory(5)->create([
                 'condominium_id' => $condo->id,
-                'created_by' => $firstStaffUser->id,
+                'created_by'     => $firstStaffUser->id,
             ]);
         }
 
         // Create 1 admin user
         User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@ideo.co.th',
-            'user_type' => 'admin',
+            'name'          => 'Admin User',
+            'email'         => 'admin@ideo.co.th',
+            'password'      => Hash::make('bhonemyatoo'),
+            'user_type'     => 'admin',
             'userable_type' => null,
-            'userable_id' => null,
+            'userable_id'   => null,
         ]);
 
         $this->command->info('✅ Seeding completed successfully!');

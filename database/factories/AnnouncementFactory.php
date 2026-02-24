@@ -3,9 +3,12 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Announcement;
 
 class AnnouncementFactory extends Factory
 {
+    protected $model = Announcement::class;
+
     public function definition(): array
     {
         $titles = [
@@ -19,19 +22,19 @@ class AnnouncementFactory extends Factory
             'Security System Upgrade',
         ];
 
-        $startDate = fake()->dateTimeBetween('-1 month', '+1 week');
-        $endDate = fake()->optional(0.7)->dateTimeBetween($startDate, '+2 months');
+        $startDate = $this->faker->dateTimeBetween('-1 month', '+1 week');
+        $endDate   = $this->faker->optional(0.7)->dateTimeBetween($startDate, '+2 months');
 
         return [
-            'title' => fake()->randomElement($titles),
-            'description' => fake()->paragraphs(3, true),
-            'image' => null,
-            'category' => fake()->randomElement(['important', 'event', 'maintenance', 'update', 'new', 'eco', 'security', 'community']),
-            'priority' => fake()->randomElement(['normal', 'high', 'urgent']),
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-            'send_email' => fake()->boolean(30),
-            'send_push' => fake()->boolean(40),
+            'title'           => $this->faker->randomElement($titles),
+            'description'     => $this->faker->paragraphs(3, true),
+            'image'           => null,
+            'category'        => $this->faker->randomElement(['important', 'event', 'maintenance', 'update', 'new', 'eco', 'security', 'community']),
+            'priority'        => $this->faker->randomElement(['normal', 'high', 'urgent']),
+            'start_date'      => $startDate,
+            'end_date'        => $endDate,
+            'send_email'      => $this->faker->boolean(30),
+            'send_push'       => $this->faker->boolean(40),
             'target_audience' => 'all',
         ];
     }
