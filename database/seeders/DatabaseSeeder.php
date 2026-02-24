@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Create 3 condominiums
-        $condos = Condominium::factory(3)->create();
+        $condos = Condominium::factory(8)->create();
 
         foreach ($condos as $condo) {
 

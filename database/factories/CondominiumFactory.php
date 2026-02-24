@@ -29,7 +29,7 @@ class CondominiumFactory extends Factory
 
         return [
             'name'         => $name,
-            'code'         => 'IDO' . rand(100, 999) . strtoupper($this->faker->lexify('??')),
+            'code'         => strtoupper($this->faker->lexify('??????')),
             'address'      => $this->faker->streetAddress() . ', Bangkok ' . $this->faker->postcode() . ', Thailand',
             'phone_number' => '02-' . $this->faker->numberBetween(100, 999) . '-' . $this->faker->numberBetween(1000, 9999),
             'email'        => 'juristic.' . strtolower(str_replace([' ', '-'], '', explode(' ', $name)[1] ?? $this->faker->word())) . '@ideo.co.th',
