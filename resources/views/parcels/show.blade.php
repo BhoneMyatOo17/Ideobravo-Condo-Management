@@ -55,17 +55,6 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Parcel Image -->
-                @if($parcel->image)
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Parcel Image</h3>
-                        <div class="relative">
-                            <img src="{{ Storage::url($parcel->image_path) }}" alt="Parcel image"
-                                class="w-full max-h-96 object-contain rounded-lg border border-gray-300 dark:border-gray-600">
-                        </div>
-                    </div>
-                @endif
-
                 <!-- Parcel Information -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Parcel Information</h3>
