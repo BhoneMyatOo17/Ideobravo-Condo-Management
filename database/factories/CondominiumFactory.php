@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Condominium;
-use Faker\Factory as FakerFactory;
 
 class CondominiumFactory extends Factory
 {
@@ -13,7 +12,6 @@ class CondominiumFactory extends Factory
     public function definition(): array
     {
         static $nameIndex = 0;
-        $faker = FakerFactory::create();
 
         $names = [
             'Ideo Q Sukhumvit 36',
@@ -31,14 +29,14 @@ class CondominiumFactory extends Factory
 
         return [
             'name'         => $name,
-            'code'         => 'IDO' . $faker->unique()->numberBetween(100, 999),
-            'address'      => $faker->streetAddress() . ', Bangkok ' . $faker->postcode() . ', Thailand',
-            'phone_number' => '02-' . $faker->numberBetween(100, 999) . '-' . $faker->numberBetween(1000, 9999),
-            'email'        => 'juristic.' . strtolower(str_replace([' ', '-'], '', explode(' ', $name)[1] ?? $faker->word())) . '@ideo.co.th',
-            'line_id'      => '@ideo' . strtolower($faker->lexify('???')),
-            'total_floors' => $faker->numberBetween(20, 50),
-            'total_units'  => $faker->randomElement([200, 300, 400, 500, 600]),
-            'built_year'   => $faker->numberBetween(2015, 2024),
+            'code'         => 'IDO' . rand(100, 999) . strtoupper($this->faker->lexify('??')),
+            'address'      => $this->faker->streetAddress() . ', Bangkok ' . $this->faker->postcode() . ', Thailand',
+            'phone_number' => '02-' . $this->faker->numberBetween(100, 999) . '-' . $this->faker->numberBetween(1000, 9999),
+            'email'        => 'juristic.' . strtolower(str_replace([' ', '-'], '', explode(' ', $name)[1] ?? $this->faker->word())) . '@ideo.co.th',
+            'line_id'      => '@ideo' . strtolower($this->faker->lexify('???')),
+            'total_floors' => $this->faker->numberBetween(20, 50),
+            'total_units'  => $this->faker->randomElement([200, 300, 400, 500, 600]),
+            'built_year'   => $this->faker->numberBetween(2015, 2024),
         ];
     }
 }
