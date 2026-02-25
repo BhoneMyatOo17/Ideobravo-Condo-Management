@@ -15,10 +15,10 @@
 
 <!-- BADGES -->
 <p align="center">
-  <img src="https://img.shields.io/badge/Laravel-11.x-red?logo=laravel" alt="Laravel"/>
-  <img src="https://img.shields.io/badge/PHP-8.x-blue?logo=php" alt="PHP"/>
-  <img src="https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?logo=tailwindcss" alt="Tailwind CSS"/>
-  <img src="https://img.shields.io/badge/MySQL-8.x-orange?logo=mysql" alt="MySQL"/>
+  <img src="https://img.shields.io/badge/Laravel-12.3.1-red?logo=laravel" alt="Laravel"/>
+  <img src="https://img.shields.io/badge/PHP-8.2.12-blue?logo=php" alt="PHP"/>
+  <img src="https://img.shields.io/badge/TailwindCSS-4.1.13-38bdf8?logo=tailwindcss" alt="Tailwind CSS"/>
+  <img src="https://img.shields.io/badge/MySQL-orange?logo=mysql" alt="MySQL"/>
   <img src="https://img.shields.io/badge/Breeze-Auth-green?logo=laravel" alt="Laravel Breeze"/>
 </p>
 
