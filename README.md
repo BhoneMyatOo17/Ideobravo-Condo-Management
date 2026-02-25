@@ -45,7 +45,7 @@ The system is built for Ideo condominiums in Bangkok, Thailand to address operat
 
 ### Resident Portal
 <p align="center">
-  <img src="screenshots/resident-portal.png" alt="Resident Portal Screenshot" width="800"/>
+  <img src="screenshots/profile.png" alt="Resident Portal Screenshot" width="800"/>
 </p>
 
 ### Billing System
