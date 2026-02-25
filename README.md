@@ -117,8 +117,8 @@ The system is built for Ideo condominiums in Bangkok, Thailand to address operat
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ideobravo.git
-cd ideobravo
+git clone https://github.com/BhoneMyatOo17/Ideobravo-Condo-Management.git
+cd Ideobravo-Condo-Management
 
 # Install PHP dependencies
 composer install
