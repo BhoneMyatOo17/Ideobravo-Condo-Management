@@ -5,56 +5,57 @@
 @section('content')
     <div class="container-fluid px-6 py-8">
         <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center">
-                <a href="{{ route('parcels.index') }}"
-                    class="mr-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-                    <i class="lni lni-arrow-left text-xl"></i>
-                </a>
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Parcel Details</h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">
-                        Tracking: {{ $parcel->tracking_number ?? 'N/A' }}
-                    </p>
-                </div>
-            </div>
-
-            <!-- Action Buttons (Staff/Admin) -->
-            @if(Auth::user()->isAdmin() || Auth::user()->isStaff())
-                <div class="flex gap-3">
-                    @if($parcel->status != 'picked_up')
-                        <form action="{{ route('parcels.mark-picked-up', $parcel) }}" method="POST" class="inline">
-                            @csrf
-                            <button type="submit" onclick="return confirm('Mark this parcel as picked up?')"
-                                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center gap-2">
-                                <i class="lni lni-checkmark-circle"></i>
-                                Mark as Picked Up
-                            </button>
-                        </form>
-                    @endif
-
-                    <a href="{{ route('parcels.edit', $parcel) }}"
-                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2">
-                        <i class="lni lni-pencil"></i>
-                        Edit
-                    </a>
-
-                    <form action="{{ route('parcels.destroy', $parcel) }}" method="POST" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this parcel?')"
-                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center gap-2">
-                            <i class="lni lni-warning"></i>
-                            Delete
-                        </button>
-                    </form>
-                </div>
-            @endif
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex items-center">
+        <a href="{{ route('parcels.index') }}"
+            class="mr-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+            <i class="lni lni-arrow-left text-xl"></i>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Parcel Details</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">
+                Tracking: {{ $parcel->tracking_number ?? 'N/A' }}
+            </p>
         </div>
+    </div>
+
+    <!-- Action Buttons (Staff/Admin) -->
+    @if(Auth::user()->isAdmin() || Auth::user()->isStaff())
+        <div class="flex flex-wrap gap-3">
+            @if($parcel->status != 'picked_up')
+                <form action="{{ route('parcels.mark-picked-up', $parcel) }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" onclick="return confirm('Mark this parcel as picked up?')"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap">
+                        <i class="lni lni-checkmark-circle"></i>
+                        Mark as Picked Up
+                    </button>
+                </form>
+            @endif
+
+            <a href="{{ route('parcels.edit', $parcel) }}"
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 hover:text-white text-white rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap">
+                <i class="lni lni-pencil"></i>
+                Edit
+            </a>
+
+            <form action="{{ route('parcels.destroy', $parcel) }}" method="POST" class="inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit" onclick="return confirm('Are you sure you want to delete this parcel?')"
+                    class="px-4 py-2 hidden md:block bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap">
+                    <i class="lni lni-warning"></i>
+                    Delete
+                </button>
+            </form>
+        </div>
+    @endif
+</div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
+
                 <!-- Parcel Information -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Parcel Information</h3>

@@ -11,7 +11,7 @@
 
   <!-- Line Icons CDN -->
   <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
-  <link rel="icon" type="image/png" sizes="194x194" href="{{ asset('favicon/favicon-194x194.png') }}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}" />
 
   <!-- Custom Tailwind Config -->
   <script>
@@ -188,23 +188,22 @@
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       document.documentElement.classList.add('dark');
     }
-  </script>
 
-  // Simulate loading then show success
-  window.addEventListener('DOMContentLoaded', function () {
-  updateDateTime();
+    // Simulate loading then show success
+    window.addEventListener('DOMContentLoaded', function () {
+      updateDateTime();
 
-  // Show success screen after 2 seconds
-  setTimeout(function () {
-  document.getElementById('loading-screen').style.display = 'none';
-  document.getElementById('success-screen').classList.remove('hidden');
-  }, 2000);
-  });
+      // Show success screen after 2 seconds
+      setTimeout(function () {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('success-screen').classList.remove('hidden');
+      }, 2000);
+    });
 
-  // Dark mode detection
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  document.documentElement.classList.add('dark');
-  }
+    // Dark mode detection
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
   </script>
 
 </body>

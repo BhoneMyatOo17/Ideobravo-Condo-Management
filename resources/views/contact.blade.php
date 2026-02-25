@@ -338,12 +338,12 @@
 
         marker.addListener("click", () => {
           const contentString = `
-                                              <div style="padding: 10px; max-width: 250px;">
-                                                  <h3 style="margin: 0 0 8px 0; color: #3d63dd; font-size: 16px; font-weight: 600;">${location.name}</h3>
-                                                  <p style="margin: 0 0 4px 0; font-size: 14px; color: #666;">${location.address}</p>
-                                                  <p style="margin: 0; font-size: 13px; color: #888;"><strong>Transit:</strong> ${location.station}</p>
-                                              </div>
-                                          `;
+                                                  <div style="padding: 10px; max-width: 250px;">
+                                                      <h3 style="margin: 0 0 8px 0; color: #3d63dd; font-size: 16px; font-weight: 600;">${location.name}</h3>
+                                                      <p style="margin: 0 0 4px 0; font-size: 14px; color: #666;">${location.address}</p>
+                                                      <p style="margin: 0; font-size: 13px; color: #888;"><strong>Transit:</strong> ${location.station}</p>
+                                                  </div>
+                                              `;
           infoWindow.setContent(contentString);
           infoWindow.open(map, marker);
         });
@@ -354,5 +354,5 @@
     window.initMap = initMap;
   </script>
   <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-_f5h2l4XYbSB_0u5_CcLKQ_QJfoRqz0&callback=initMap"></script>
+    src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap"></script>
 @endsection
