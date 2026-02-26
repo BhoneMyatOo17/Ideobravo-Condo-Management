@@ -183,7 +183,7 @@
                     <div class="aspect-video rounded-xl overflow-hidden">
                         <iframe
                             class="w-full h-full"
-                            src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+                            src="https://youtu.be/lhmxe7ZZYEE?si=r1ZqjAgcnEzOAtM2"
                             title="Ideo Introduction Video"
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
