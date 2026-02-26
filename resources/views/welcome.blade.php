@@ -181,14 +181,7 @@
 
                 <div class="scroll-revealed relative max-w-[900px] mx-auto">
                     <div class="aspect-video rounded-xl overflow-hidden">
-                        <iframe
-                            class="w-full h-full"
-                            src="https://youtu.be/lhmxe7ZZYEE?si=r1ZqjAgcnEzOAtM2"
-                            title="Ideo Introduction Video"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen>
-                        </iframe>
+                        <iframe class="w-full h-full" src="https://www.youtube.com/embed/lhmxe7ZZYEE?si=j4DS-VEPN1VRx9J_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
