@@ -180,7 +180,7 @@
                 </div>
 
                 <div class="scroll-revealed relative max-w-[900px] mx-auto">
-                    <img src="{{ asset('images/intro-video.jpg') }}" alt="Ideo Introduction Video"
+                    <img src="{{ asset('images/intro.jpg') }}" alt="Ideo Introduction Video"
                         class="w-full h-full aspect-video rounded-xl object-cover" />
                     <a href="javascript:void(0)"
                         class="video-popup w-[80px] h-[80px] rounded-full inline-flex items-center justify-center bg-primary text-primary-color text-[1.875rem] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-md hover:bg-primary-color hover:text-primary hover:shadow-xl focus:bg-primary-color focus:text-primary focus:shadow-xl">
