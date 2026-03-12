@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // Create 8 condominiums
         $condos = Condominium::factory(8)->create();
-        $condos->first()->update(['code' => 'YUBNQ?']);
+        $condos->first()->update(['code' => 'YUBNQ1']);
 
         // Get the Ideo Sukhumvit 93 condo (index 3)
         $testCondo = $condos->get(3);
