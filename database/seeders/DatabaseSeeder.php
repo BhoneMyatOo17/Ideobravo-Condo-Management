@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // Create 3 condominiums
         $condos = Condominium::factory(8)->create();
-
+        $condos->first()->update(['code' => 'YUBNQ1']);
         foreach ($condos as $condo) {
 
             $firstStaffUser = null;
