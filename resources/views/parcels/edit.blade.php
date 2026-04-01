@@ -4,7 +4,6 @@
 
 @section('content')
   <div class="container-fluid px-6 py-8">
-    <!-- Header -->
     <div class="flex items-center mb-6">
       <a href="{{ route('parcels.index') }}"
         class="mr-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
@@ -16,14 +15,12 @@
       </div>
     </div>
 
-    <!-- Form -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 max-w-3xl">
       <form action="{{ route('parcels.update', $parcel) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Recipient Name -->
           <div class="md:col-span-2">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Recipient Name <span class="text-red-500">*</span>
@@ -36,7 +33,6 @@
             @enderror
           </div>
 
-          <!-- Room Number -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Room Number <span class="text-red-500">*</span>
@@ -49,7 +45,6 @@
             @enderror
           </div>
 
-          <!-- Tracking Number -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Tracking Number
@@ -62,7 +57,6 @@
             @enderror
           </div>
 
-          <!-- Courier Service -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Courier Service <span class="text-red-500">*</span>
@@ -75,7 +69,6 @@
             @enderror
           </div>
 
-          <!-- Received Date -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Received Date <span class="text-red-500">*</span>
@@ -88,7 +81,6 @@
             @enderror
           </div>
 
-          <!-- Status -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Status <span class="text-red-500">*</span>
@@ -109,23 +101,21 @@
             @enderror
           </div>
 
-          <!-- Current Parcel Image -->
-          @if($parcel->image_path)
+          @if($parcel->image)
             <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Current Image
               </label>
               <div class="relative inline-block">
-                <img src="{{ Storage::url($parcel->image_path) }}" alt="Current parcel image"
+                <img src="{{ asset('storage/' . $parcel->image) }}" alt="Current parcel image"
                   class="w-48 h-48 object-cover rounded-lg border border-gray-300 dark:border-gray-600">
               </div>
             </div>
           @endif
 
-          <!-- New Parcel Image -->
           <div class="md:col-span-2">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {{ $parcel->image_path ? 'Replace Image (Optional)' : 'Parcel Image' }}
+              {{ $parcel->image ? 'Replace Image (Optional)' : 'Parcel Image' }}
             </label>
             <div class="flex items-center justify-center w-full">
               <label
@@ -150,7 +140,6 @@
             @enderror
           </div>
 
-          <!-- Notes -->
           <div class="md:col-span-2">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes</label>
             <textarea name="notes" rows="3"
@@ -162,7 +151,6 @@
           </div>
         </div>
 
-        <!-- Actions -->
         <div class="flex items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
           <div class="flex gap-4">
             <a href="{{ route('parcels.index') }}"

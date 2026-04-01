@@ -127,9 +127,9 @@
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Parcel Image</h3>
                 <div class="relative">
-                    <img src="{{ Storage::url($parcel->image) }}" alt="Parcel image"
-                        class="w-full max-h-96 object-contain rounded-lg border border-gray-300 dark:border-gray-600"
-                        onerror="this.closest('.bg-white, .dark\\:bg-gray-800').style.display='none'">
+                    <img src="{{ asset('storage/' . $parcel->image) }}" alt="Parcel image"
+                    class="w-full max-h-96 object-contain rounded-lg border border-gray-300 dark:border-gray-600"
+                    onerror="this.closest('.bg-white, .dark\\:bg-gray-800').style.display='none'">
                 </div>
             </div>
         @endif
