@@ -65,28 +65,28 @@ The system is built for Ideo condominiums in Bangkok, Thailand to address operat
 
 ---
 
-## ✨ Features
+## System Features
 
-### 👤 Resident Account Management
+### Resident Account Management
 - Resident self-service portal to view and manage personal information
 - Role-based access for residents, staff, and admin
 
-### 💳 Digital Billing System
+### Digital Billing System
 - Digital delivery of electric, water, and insurance bills to resident portals
 - QR code payment integration
 - Payment tracking and confirmation by staff
 - Full bill payment history for residents
 
-### 📦 Parcel Management
+### Parcel Management
 - Staff parcel logging with room number, image, and generated ID
 - Resident parcel notifications
 - Verified pickup confirmation system
 
-### 📢 Announcement System
+### Announcement System
 - Resident-only announcement channel (no public access)
 - Secure access replacing the public LINE QR code system
 
-### 📊 Admin Reporting Dashboard
+### Admin Reporting Dashboard
 - Comprehensive data reports across all modules
 - Consolidated records replacing fragmented third-party software
 
