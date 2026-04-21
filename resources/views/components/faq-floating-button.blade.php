@@ -34,13 +34,12 @@
   </button>
 
   <!-- Popup Modal - Responsive -->
-  <div x-show="open" x-transition:enter="transition ease-out duration-300"
+  <div x-cloak x-show="open" x-transition:enter="transition ease-out duration-300"
     x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100"
     x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 transform scale-100"
-    x-transition:leave-end="opacity-0 transform scale-95" @click.away="open = false" class="md:absolute md:bottom-20 md:right-0 md:w-[480px] 
-           fixed left-0 right-0 bottom-0 w-full md:rounded-2xl rounded-t-2xl
-           bg-white dark:bg-gray-800 shadow-2xl overflow-hidden max-h-[85vh] md:max-h-[28rem] flex flex-col"
-    style="display: none;">
+    x-transition:leave-end="opacity-0 transform scale-95" @click.away="open = false" class="fixed left-0 right-0 bottom-0 w-full rounded-t-2xl
+           md:absolute md:bottom-20 md:right-0 md:left-auto md:w-[480px] md:rounded-2xl
+           bg-white dark:bg-gray-800 shadow-2xl overflow-hidden max-h-[85vh] md:max-h-[28rem] flex flex-col">
 
     <!-- Header -->
     <div class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 px-4 md:px-6 py-4 flex-shrink-0">
@@ -65,30 +64,12 @@
 
         @php
           $faqs = [
-            [
-              'title' => 'How do I check my bills?',
-              'anchor' => 'bills'
-            ],
-            [
-              'title' => 'How do I track my parcels?',
-              'anchor' => 'parcels'
-            ],
-            [
-              'title' => 'How do I update my profile?',
-              'anchor' => 'profile'
-            ],
-            [
-              'title' => 'How do I make payments?',
-              'anchor' => 'payments'
-            ],
-            [
-              'title' => 'Where can I see announcements?',
-              'anchor' => 'announcements'
-            ],
-            [
-              'title' => 'How do I contact support?',
-              'anchor' => 'support'
-            ]
+            ['title' => 'How do I check my bills?', 'anchor' => 'bills'],
+            ['title' => 'How do I track my parcels?', 'anchor' => 'parcels'],
+            ['title' => 'How do I update my profile?', 'anchor' => 'profile'],
+            ['title' => 'How do I make payments?', 'anchor' => 'payments'],
+            ['title' => 'Where can I see announcements?', 'anchor' => 'announcements'],
+            ['title' => 'How do I contact support?', 'anchor' => 'support'],
           ];
         @endphp
 
@@ -111,9 +92,7 @@
 
         <a href="{{ route('faq') }}"
           class="flex items-center justify-center p-3 mt-4 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-          <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">
-            View All FAQs
-          </span>
+          <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">View All FAQs</span>
           <svg class="w-4 h-4 ml-2 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor"
             viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -171,7 +150,7 @@
         </div>
 
         <a href="{{ route('contact') }}"
-          class="flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r hover:text-white from-blue-500 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg mt-3">
+          class="flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-indigo-700 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg mt-3">
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />

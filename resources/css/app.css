@@ -22,10 +22,9 @@
     @apply bg-transparent;
   }
 
-  *,
-  *::before,
-  *::after {
-    @apply transition-all duration-[400ms];
+  /* Alpine.js cloak - hide elements until Alpine initializes */
+  [x-cloak] {
+    display: none !important;
   }
 
   html {

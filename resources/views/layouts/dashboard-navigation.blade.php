@@ -9,7 +9,8 @@
     <div class="flex items-center justify-center h-16 px-6 border-b border-gray-200 dark:border-gray-700">
       <a href="{{ route('dashboard') }}" class="flex items-center">
         <img src="{{ asset('images/logo-blue.png') }}" alt="IdeoBravo" class="h-8 sidebar-logo-full">
-        <img src="{{ asset('images/ideobravo-logo.png') }}" alt="IdeoBravo" class="h-10 sidebar-logo-small hidden">
+        <img src="{{ asset('images/ideobravo-logo.png') }}" alt="IdeoBravo"
+          class="h-10 w-10 object-contain sidebar-logo-small hidden">
       </a>
     </div>
 

@@ -148,6 +148,18 @@
                 });
             }
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('1. Alpine exists:', typeof Alpine !== 'undefined');
+            console.log('2. Alpine version:', typeof Alpine !== 'undefined' ? Alpine.version : 'N/A');
+
+            const faqBtn = document.querySelector('[aria-label="FAQ and Help"]');
+            console.log('3. FAQ button found:', faqBtn !== null);
+
+            const faqDiv = faqBtn ? faqBtn.closest('[x-data]') : null;
+            console.log('4. x-data parent found:', faqDiv !== null);
+            console.log('5. x-data value:', faqDiv ? faqDiv.getAttribute('x-data') : 'N/A');
+        });
+
     </script>
 </body>
 
