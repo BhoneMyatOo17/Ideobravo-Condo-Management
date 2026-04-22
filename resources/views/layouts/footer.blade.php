@@ -115,7 +115,10 @@
 
           <form action="/subscribe" method="POST" class="mt-6">
             @csrf
-
+            <!-- Honeypot - hidden from real users -->
+            <div style="display:none">
+              <input type="text" name="website" value="" tabindex="-1" autocomplete="off">
+            </div>
             <input type="text" name="name"
               class="inline-block w-full px-5 py-3 mb-3 rounded-md border border-solid border-alpha-light dark:border-alpha-dark bg-transparent text-inherit text-base focus:border-primary"
               placeholder="Your name" value="{{ old('name') }}" required />

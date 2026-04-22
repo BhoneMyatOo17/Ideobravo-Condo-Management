@@ -112,6 +112,9 @@
 
               <form action="{{ route('contact.store') }}" method="POST" class="flex flex-col gap-6">
                 @csrf
+                <div style="display:none">
+                  <input type="text" name="website" value="" tabindex="-1" autocomplete="off">
+                </div>
                 <div class="row">
                   <div class="col-12 md:col-6">
                     <input type="text" name="name" value="{{ old('name') }}"
@@ -338,12 +341,12 @@
 
         marker.addListener("click", () => {
           const contentString = `
-                                                  <div style="padding: 10px; max-width: 250px;">
-                                                      <h3 style="margin: 0 0 8px 0; color: #3d63dd; font-size: 16px; font-weight: 600;">${location.name}</h3>
-                                                      <p style="margin: 0 0 4px 0; font-size: 14px; color: #666;">${location.address}</p>
-                                                      <p style="margin: 0; font-size: 13px; color: #888;"><strong>Transit:</strong> ${location.station}</p>
-                                                  </div>
-                                              `;
+                                                    <div style="padding: 10px; max-width: 250px;">
+                                                        <h3 style="margin: 0 0 8px 0; color: #3d63dd; font-size: 16px; font-weight: 600;">${location.name}</h3>
+                                                        <p style="margin: 0 0 4px 0; font-size: 14px; color: #666;">${location.address}</p>
+                                                        <p style="margin: 0; font-size: 13px; color: #888;"><strong>Transit:</strong> ${location.station}</p>
+                                                    </div>
+                                                `;
           infoWindow.setContent(contentString);
           infoWindow.open(map, marker);
         });

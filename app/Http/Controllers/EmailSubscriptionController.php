@@ -9,6 +9,11 @@ class EmailSubscriptionController extends Controller
 {
     public function store(Request $request)
     {
+        // Honeypot check
+        if ($request->filled('website')) {
+            return back()->with('success', 'Thanks for subscribing, ' . $request->name . '!');
+        }
+
         $request->validate([
             'name' => 'required|string|min:2|max:255',
             'email' => 'required|email|unique:newsletter,email',

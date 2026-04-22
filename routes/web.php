@@ -34,7 +34,7 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:5,1');
 
 Route::get('/team', function () {
     return view('team');
@@ -73,7 +73,7 @@ Route::get('/faq', function () {
     return view('faq');
 })->name('faq');
 
-Route::post('/subscribe', [EmailSubscriptionController::class, 'store']);
+Route::post('/subscribe', [EmailSubscriptionController::class, 'store'])->middleware('throttle:3,1');
 
 
 /*

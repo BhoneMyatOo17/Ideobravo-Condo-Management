@@ -14,17 +14,17 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $status = $request->get('status', 'all');
-        
+
         $query = Contact::with('resolver')->latest();
-        
+
         if ($status === 'pending') {
             $query->pending();
         } elseif ($status === 'resolved') {
             $query->resolved();
         }
-        
+
         $contacts = $query->paginate(15);
-        
+
         return view('contacts.index', compact('contacts', 'status'));
     }
 
@@ -42,6 +42,11 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
+
+        if ($request->filled('website')) {
+            return redirect()->back()->with('success', 'Thank you for contacting us! We will get back to you within 24 hours.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
