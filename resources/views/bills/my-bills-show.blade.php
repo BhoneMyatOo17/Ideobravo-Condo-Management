@@ -57,7 +57,7 @@
             @if($bill->payment_proof)
               <div class="mt-3">
                 <p class="text-sm text-yellow-700 dark:text-yellow-300 mb-2 font-medium">Submitted Payment Slip:</p>
-                <img src="{{ asset('storage/' . $bill->payment_proof) }}" alt="Payment Proof"
+                <img src="{{ \Storage::disk('s3')->url($bill->payment_proof) }}" alt="Payment Proof"
                   class="max-w-xs rounded-lg border-2 border-yellow-300 dark:border-yellow-700">
               </div>
             @endif

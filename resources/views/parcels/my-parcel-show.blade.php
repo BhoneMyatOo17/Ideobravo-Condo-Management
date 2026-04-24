@@ -67,7 +67,7 @@
             <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
               <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Parcel Image</label>
               <div class="max-w-md">
-                <img src="{{ asset('storage/' . $parcel->image) }}" alt="Parcel image"
+                <img src="{{ \Storage::disk('s3')->url($parcel->image) }}" alt="Parcel image"
                   class="w-full rounded-lg shadow-lg cursor-pointer hover:opacity-90 transition"
                   onclick="document.getElementById('imageModal').classList.remove('hidden')">
               </div>
@@ -77,7 +77,7 @@
             <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 items-center justify-center p-4"
               onclick="this.classList.add('hidden')">
               <div class="max-w-4xl w-full">
-                <img src="{{ asset('storage/' . $parcel->image) }}" alt="Parcel image" class="w-full rounded-lg">
+                <img src="{{ \Storage::disk('s3')->url($parcel->image) }}" alt="Parcel image" class="w-full rounded-lg">
               </div>
             </div>
           @endif
