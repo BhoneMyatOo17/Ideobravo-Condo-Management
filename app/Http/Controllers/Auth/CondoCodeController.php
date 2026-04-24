@@ -10,21 +10,15 @@ use Illuminate\Support\Facades\Auth;
 
 class CondoCodeController extends Controller
 {
-    /**
-     * Show the condo code entry form
-     */
     public function show()
     {
-        if (Auth::user()->hasRole()) {
+        if (Auth::user()->hasCompletedRegistration()) {
             return redirect()->route('dashboard');
         }
 
         return view('auth.condo-code');
     }
 
-    /**
-     * Verify the condominium code
-     */
     public function verify(Request $request)
     {
         $request->validate([
@@ -33,26 +27,19 @@ class CondoCodeController extends Controller
             'condominium_code.exists' => 'Invalid condominium code. Please check and try again.',
         ]);
 
-        // Get the condominium
         $condominium = Condominium::where('code', $request->condominium_code)->first();
 
-        // Store condominium in session for next step
         session(['pending_condominium_id' => $condominium->id]);
 
         return redirect()->route('resident.details');
     }
 
-    /**
-     * Show resident details form
-     */
     public function showDetails()
     {
-        // Check if user already has a role
-        if (Auth::user()->hasRole()) {
+        if (Auth::user()->hasCompletedRegistration()) {
             return redirect()->route('dashboard');
         }
 
-        // Check if condominium is in session
         if (!session()->has('pending_condominium_id')) {
             return redirect()->route('condo-code')->with('error', 'Please enter your condominium code first.');
         }
@@ -62,9 +49,6 @@ class CondoCodeController extends Controller
         return view('auth.resident-details', compact('condominium'));
     }
 
-    /**
-     * Complete resident registration
-     */
     public function complete(Request $request)
     {
         $request->validate([
@@ -81,12 +65,10 @@ class CondoCodeController extends Controller
 
         $user = Auth::user();
 
-        // Check if user already has a role
-        if ($user->hasRole()) {
+        if ($user->hasCompletedRegistration()) {
             return redirect()->route('dashboard')->with('error', 'You already have a registered profile.');
         }
 
-        // Create resident record
         $resident = Resident::create([
             'user_id' => $user->id,
             'condominium_id' => $request->condominium_id,
@@ -101,14 +83,13 @@ class CondoCodeController extends Controller
             'is_active' => true,
         ]);
 
-        // Update user with polymorphic relationship
         $user->update([
             'user_type' => 'resident',
+            'condo_id' => $request->condominium_id,
             'userable_id' => $resident->id,
             'userable_type' => Resident::class,
         ]);
 
-        // Clear session
         session()->forget('pending_condominium_id');
 
         return redirect()->route('dashboard')->with('success', 'Welcome to ' . $resident->condominium->name . '!');
