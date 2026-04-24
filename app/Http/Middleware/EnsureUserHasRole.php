@@ -10,12 +10,9 @@ class EnsureUserHasRole
 {
     public function handle(Request $request, Closure $next): Response
     {
-        
         $user = $request->user();
-        
-        // If user is authenticated but doesn't have a role
-        if ($user && !$user->hasRole()) {
-            // Allow only registration flow routes
+
+        if ($user && $user->user_type === 'resident' && is_null($user->condo_id)) {
             $allowedRoutes = [
                 'condo-code',
                 'condo-code.verify',
@@ -23,14 +20,13 @@ class EnsureUserHasRole
                 'resident.complete',
                 'logout'
             ];
-            
+
             if (!$request->routeIs($allowedRoutes)) {
                 return redirect()->route('condo-code')
                     ->with('info', 'Please complete your registration to access this feature.');
             }
         }
-        
-        // If user HAS a role but trying to access registration pages, redirect to dashboard
+
         if ($user && $user->hasRole()) {
             $registrationRoutes = [
                 'condo-code',
@@ -38,7 +34,7 @@ class EnsureUserHasRole
                 'resident.details',
                 'resident.complete'
             ];
-            
+
             if ($request->routeIs($registrationRoutes)) {
                 return redirect()->route('dashboard')
                     ->with('info', 'You have already completed your registration.');
