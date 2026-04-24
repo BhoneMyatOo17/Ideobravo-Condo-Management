@@ -66,8 +66,8 @@ class User extends Authenticatable
      */
     public function isResident(): bool
     {
-        return $this->user_type === 'resident' || 
-               $this->userable_type === 'App\\Models\\Resident';
+        return $this->user_type === 'resident' ||
+            $this->userable_type === 'App\\Models\\Resident';
     }
 
     /**
@@ -75,8 +75,8 @@ class User extends Authenticatable
      */
     public function isStaff(): bool
     {
-        return $this->user_type === 'staff' || 
-               $this->userable_type === 'App\\Models\\Staff';
+        return $this->user_type === 'staff' ||
+            $this->userable_type === 'App\\Models\\Staff';
     }
 
     /**
@@ -84,8 +84,8 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->user_type === 'admin' || 
-               $this->userable_type === 'App\\Models\\Admin';
+        return $this->user_type === 'admin' ||
+            $this->userable_type === 'App\\Models\\Admin';
     }
 
     /**
@@ -94,6 +94,11 @@ class User extends Authenticatable
     public function hasRole(): bool
     {
         return !is_null($this->user_type);
+    }
+
+    public function isManagementStaff(): bool
+    {
+        return $this->user_type === 'staff' && is_null($this->condo_id);
     }
 
     /**

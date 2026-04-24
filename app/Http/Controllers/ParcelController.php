@@ -12,46 +12,43 @@ use App\Mail\ParcelArrivedMail;
 
 class ParcelController extends Controller
 {
-    /**
-     * Get the condominium ID for the current staff/admin user
-     */
     private function getCondominiumId()
     {
         $user = Auth::user();
+
+        if ($user->isManagementStaff()) {
+            return null;
+        }
 
         if ($user->isStaff() && $user->userable) {
             return $user->userable->condominium_id;
         }
 
         if ($user->isAdmin()) {
-            return \App\Models\Condominium::first()?->id;
+            return null;
         }
 
         return null;
     }
 
-    /**
-     * Display a listing of parcels (Staff/Admin view)
-     */
     public function index(Request $request)
     {
+        $user = Auth::user();
+        $condominiumId = $this->getCondominiumId();
+
         $query = Parcel::with(['resident.user', 'receivedByStaff']);
 
-        // For staff, filter by their condominium
-        if (Auth::user()->isStaff()) {
-            $condominiumId = $this->getCondominiumId();
+        if ($user->isStaff() && !$user->isManagementStaff()) {
             if (!$condominiumId) {
                 abort(403, 'No condominium associated with your account.');
             }
             $query->where('condominium_id', $condominiumId);
         }
 
-        // For admin, allow filtering by condominium
-        if (Auth::user()->isAdmin() && $request->filled('condominium_id')) {
+        if (($user->isAdmin() || $user->isManagementStaff()) && $request->filled('condominium_id')) {
             $query->where('condominium_id', $request->condominium_id);
         }
 
-        // Filter by search
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -60,17 +57,14 @@ class ParcelController extends Controller
             });
         }
 
-        // Filter by status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
         $parcels = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        // Get stats
         $statsQuery = Parcel::query();
-        if (Auth::user()->isStaff()) {
-            $condominiumId = $this->getCondominiumId();
+        if ($user->isStaff() && !$user->isManagementStaff()) {
             $statsQuery->where('condominium_id', $condominiumId);
         }
 
@@ -81,38 +75,42 @@ class ParcelController extends Controller
             'today' => (clone $statsQuery)->whereDate('received_date', today())->count(),
         ];
 
-        // Get condominiums for admin filter
         $condominiums = [];
-        if (Auth::user()->isAdmin()) {
+        if ($user->isAdmin() || $user->isManagementStaff()) {
             $condominiums = \App\Models\Condominium::orderBy('name')->get();
         }
 
         return view('parcels.index', compact('parcels', 'stats', 'condominiums'));
     }
 
-    /**
-     * Show the form for creating a new parcel
-     */
     public function create()
     {
+        $user = Auth::user();
+
+        if ($user->isManagementStaff() || $user->isAdmin()) {
+            $condominiums = \App\Models\Condominium::orderBy('name')->get();
+            return view('parcels.create', compact('condominiums'));
+        }
+
         $condominiumId = $this->getCondominiumId();
 
         if (!$condominiumId) {
             abort(403, 'No condominium associated with your account.');
         }
 
-        // Staff automatically uses their assigned condominium
         $condominium = \App\Models\Condominium::findOrFail($condominiumId);
-
         return view('parcels.create', compact('condominium'));
     }
 
-    /**
-     * Store a newly created parcel
-     */
     public function store(Request $request)
     {
-        $condominiumId = $this->getCondominiumId();
+        $user = Auth::user();
+
+        if ($user->isManagementStaff() || $user->isAdmin()) {
+            $condominiumId = $request->condominium_id;
+        } else {
+            $condominiumId = $this->getCondominiumId();
+        }
 
         if (!$condominiumId) {
             abort(403, 'No condominium associated with your account.');
@@ -129,20 +127,17 @@ class ParcelController extends Controller
             'send_notification' => 'nullable|boolean',
         ]);
 
-        // Try to find resident by room number FIRST
         $resident = Resident::where('condominium_id', $condominiumId)
             ->where('unit_number', $validated['room_number'])
             ->where('is_active', true)
             ->with('user')
             ->first();
 
-        // Handle image upload
         $imagePath = null;
         if ($request->hasFile('parcel_image')) {
             $imagePath = $request->file('parcel_image')->store('parcels', 's3');
         }
 
-        // Create parcel with resident_id if found
         $parcel = Parcel::create([
             'condominium_id' => $condominiumId,
             'resident_id' => $resident?->id,
@@ -158,16 +153,10 @@ class ParcelController extends Controller
             'image' => $imagePath,
         ]);
 
-        // Send email notification if checkbox is checked and resident exists
         if ($request->boolean('send_notification') && $resident && $resident->user && $resident->user->email) {
             try {
                 logger()->info('Sending parcel email to: ' . $resident->user->email);
-
-                Mail::to($resident->user->email)->send(new ParcelArrivedMail(
-                    $parcel,
-                    $resident->user->email
-                ));
-
+                Mail::to($resident->user->email)->send(new ParcelArrivedMail($parcel, $resident->user->email));
                 logger()->info('Parcel email sent successfully');
             } catch (\Exception $e) {
                 logger()->error('Failed to send parcel notification email: ' . $e->getMessage());
@@ -175,55 +164,51 @@ class ParcelController extends Controller
         }
 
         $successMessage = 'Parcel registered successfully for ' . $parcel->recipient_name . ' - Room ' . $parcel->unit_number;
-
-        if ($resident) {
-            $successMessage .= ' (Linked to resident: ' . $resident->user->name . ')';
-        } else {
-            $successMessage .= ' (No registered resident found for this room)';
-        }
+        $successMessage .= $resident
+            ? ' (Linked to resident: ' . $resident->user->name . ')'
+            : ' (No registered resident found for this room)';
 
         return redirect()->route('parcels.index')->with('success', $successMessage);
     }
 
-    /**
-     * Display the specified parcel
-     */
     public function show(Parcel $parcel)
     {
+        $user = Auth::user();
         $condominiumId = $this->getCondominiumId();
 
-        if ($parcel->condominium_id !== $condominiumId) {
-            abort(403);
+        if (!$user->isAdmin() && !$user->isManagementStaff()) {
+            if ($parcel->condominium_id !== $condominiumId) {
+                abort(403);
+            }
         }
 
         $parcel->load(['resident.user', 'receivedByStaff', 'pickedUpByResident.user']);
-
         return view('parcels.show', compact('parcel'));
     }
 
-    /**
-     * Show the form for editing the parcel
-     */
     public function edit(Parcel $parcel)
     {
+        $user = Auth::user();
         $condominiumId = $this->getCondominiumId();
 
-        if ($parcel->condominium_id !== $condominiumId) {
-            abort(403);
+        if (!$user->isAdmin() && !$user->isManagementStaff()) {
+            if ($parcel->condominium_id !== $condominiumId) {
+                abort(403);
+            }
         }
 
         return view('parcels.edit', compact('parcel'));
     }
 
-    /**
-     * Update the specified parcel
-     */
     public function update(Request $request, Parcel $parcel)
     {
+        $user = Auth::user();
         $condominiumId = $this->getCondominiumId();
 
-        if ($parcel->condominium_id !== $condominiumId) {
-            abort(403);
+        if (!$user->isAdmin() && !$user->isManagementStaff()) {
+            if ($parcel->condominium_id !== $condominiumId) {
+                abort(403);
+            }
         }
 
         $validated = $request->validate([
@@ -237,13 +222,10 @@ class ParcelController extends Controller
             'parcel_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
-        // Map room_number to unit_number for database
         $validated['unit_number'] = $validated['room_number'];
         unset($validated['room_number']);
 
-        // Handle image upload - column name is 'image' in migration
         if ($request->hasFile('parcel_image')) {
-            // Delete old image
             if ($parcel->image) {
                 Storage::disk('s3')->delete($parcel->image);
             }
@@ -252,54 +234,44 @@ class ParcelController extends Controller
         unset($validated['parcel_image']);
 
         $parcel->update($validated);
-
-        return redirect()->route('parcels.show', $parcel)
-            ->with('success', 'Parcel updated successfully.');
+        return redirect()->route('parcels.show', $parcel)->with('success', 'Parcel updated successfully.');
     }
 
-    /**
-     * Mark parcel as picked up
-     */
     public function markPickedUp(Parcel $parcel)
     {
-        // Admin can mark any parcel as picked up
-        if (Auth::user()->isAdmin()) {
+        $user = Auth::user();
+
+        if ($user->isAdmin() || $user->isManagementStaff()) {
             $parcel->markAsPickedUp($parcel->resident_id);
             return back()->with('success', 'Parcel marked as picked up.');
         }
 
-        // Staff must be from the same condominium
         $condominiumId = $this->getCondominiumId();
-
         if ($parcel->condominium_id !== $condominiumId) {
             abort(403);
         }
 
         $parcel->markAsPickedUp($parcel->resident_id);
-
         return back()->with('success', 'Parcel marked as picked up.');
     }
 
-    /**
-     * Remove the specified parcel
-     */
     public function destroy(Parcel $parcel)
     {
+        $user = Auth::user();
         $condominiumId = $this->getCondominiumId();
 
-        if ($parcel->condominium_id !== $condominiumId) {
-            abort(403);
+        if (!$user->isAdmin() && !$user->isManagementStaff()) {
+            if ($parcel->condominium_id !== $condominiumId) {
+                abort(403);
+            }
         }
 
-        // Delete image if exists
         if ($parcel->image) {
             Storage::disk('s3')->delete($parcel->image);
         }
 
         $parcel->delete();
-
-        return redirect()->route('parcels.index')
-            ->with('success', 'Parcel deleted successfully.');
+        return redirect()->route('parcels.index')->with('success', 'Parcel deleted successfully.');
     }
 
     public function myParcels(Request $request)
@@ -315,7 +287,6 @@ class ParcelController extends Controller
         $query = Parcel::where('resident_id', $resident->id)
             ->with('receivedByStaff');
 
-        // Filter by status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
@@ -332,9 +303,6 @@ class ParcelController extends Controller
         return view('parcels.my-parcels', compact('parcels', 'stats'));
     }
 
-    /**
-     * Display specific parcel for resident
-     */
     public function myParcelShow(Parcel $parcel)
     {
         $user = Auth::user();
@@ -345,19 +313,14 @@ class ParcelController extends Controller
 
         $resident = Resident::where('user_id', $user->id)->firstOrFail();
 
-        // Check if parcel belongs to this resident
         if ($parcel->resident_id !== $resident->id) {
             abort(403);
         }
 
         $parcel->load('receivedByStaff', 'condominium');
-
         return view('parcels.my-parcel-show', compact('parcel'));
     }
 
-    /**
-     * Resident confirms parcel pickup
-     */
     public function confirmPickup(Parcel $parcel)
     {
         $user = Auth::user();
@@ -368,19 +331,15 @@ class ParcelController extends Controller
 
         $resident = Resident::where('user_id', $user->id)->firstOrFail();
 
-        // Check if parcel belongs to this resident
         if ($parcel->resident_id !== $resident->id) {
             abort(403);
         }
 
-        // Check if parcel is still pending or notified
         if (!in_array($parcel->status, ['pending', 'notified'])) {
             return back()->with('error', 'This parcel has already been picked up.');
         }
 
-        // Mark as picked up
         $parcel->markAsPickedUp($resident->id);
-
         return back()->with('success', 'Thank you! Parcel pickup confirmed.');
     }
 }
