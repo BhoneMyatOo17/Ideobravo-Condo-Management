@@ -270,7 +270,7 @@ class AnnouncementController extends Controller
 
         // Delete image if exists
         if ($announcement->image) {
-            Storage::disk('public')->delete($announcement->image);
+            Storage::disk('s3')->delete($announcement->image);
         }
 
         $announcement->delete();
